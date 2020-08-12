@@ -2,9 +2,6 @@
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/pickup").build();
 
-//Disable send button until connection is established
-document.getElementById("sendButton").disabled = true;
-
 connection.on("PickupAnnouncement", function (user, message) {
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     var encodedMsg = user + " says " + msg;
@@ -14,16 +11,7 @@ connection.on("PickupAnnouncement", function (user, message) {
 });
 
 connection.start().then(function () {
-    document.getElementById("sendButton").disabled = false;
+    //Maybe add connected thing
 }).catch(function (err) {
     return console.error(err.toString());
-});
-
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("AnnouncePickup", user, message).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
 });

@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  pickupannouncer:
+    image: ${DOCKER_REGISTRY-}pickupannouncer
+    build:
+      context: .
+      dockerfile: PickupAnnouncer/Dockerfile
