@@ -2,11 +2,20 @@
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/pickup").build();
 
-connection.on("PickupAnnouncement", function (user, message) {
-    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = user + " says " + msg;
+connection.on("PickupAnnouncement", function (pickupAnnouncementJson) {
+    console.log("Got it: " + pickupAnnouncementJson);
+    var pickupAnnouncement = JSON.parse(pickupAnnouncementJson);
     var li = document.createElement("li");
-    li.textContent = encodedMsg;
+    var studentDetails = "";
+    if (pickupAnnouncement.studentDetails && pickupAnnouncement.studentDetails.length > 0) {
+        pickupAnnouncement.studentDetails.forEach((details) => {
+            studentDetails += `[${details.name},${details.teacher},${details.gradeLevel}]`;
+        });
+    }
+    else {
+        studentDetails = "No Students Found"
+    }
+    li.textContent = `${pickupAnnouncement.car} is here @ cone ${pickupAnnouncement.cone} : ${studentDetails}`;
     document.getElementById("messagesList").appendChild(li);
 });
 

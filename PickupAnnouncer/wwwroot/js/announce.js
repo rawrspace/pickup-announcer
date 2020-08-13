@@ -14,7 +14,7 @@ connection.start().then(function () {
 document.getElementById("sendButton").addEventListener("click", function (event) {
     var car = document.getElementById("carInput").value;
     var cone = document.getElementById("coneInput").value;
-    connection.invoke("AnnouncePickup", car, cone).catch(function (err) {
+    connection.invoke("AnnouncePickup", { 'car': car, 'cone': cone }).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
