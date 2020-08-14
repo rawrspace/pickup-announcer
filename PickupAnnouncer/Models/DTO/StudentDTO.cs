@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace PickupAnnouncer.Models
+namespace PickupAnnouncer.Models.DTO
 {
-    public class StudentDetails
+    public class StudentDTO
     {
         [JsonProperty("name")]
         public string Name { get; set; }

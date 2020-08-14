@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using PickupAnnouncer.Helpers;
 using PickupAnnouncer.Hubs;
 using PickupAnnouncer.Interfaces;
+using PickupAnnouncer.Mappings;
+using PickupAnnouncer.Services;
 
 namespace PickupAnnouncer
 {
@@ -26,7 +29,17 @@ namespace PickupAnnouncer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IStudentDetailsHelper, StudentDetailsHelper>();
+            services.AddTransient<IDbService, DbService>(builder => new DbService(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient<IStudentHelper, StudentHelper>();
+            services.AddTransient<IMapper, Mapper>(builder =>
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile(new BaseProfile());
+                });
+                return new Mapper(config);
+            });
+            services.AddTransient<IRegistrationFileHelper, RegistrationFileHelper>();
             services.AddRazorPages();
             services.AddSignalR();
         }

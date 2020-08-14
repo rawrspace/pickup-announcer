@@ -1,0 +1,53 @@
+﻿@page
+@model PickupAnnouncer.Pages.AdminModel
+@{
+    ViewData["Title"] = "Admin";
+}
+@section head {
+    <link rel="stylesheet" href="~/css/uploadForm.css" />
+    <link href="~/lib/bootstrap/dist/css/" rel="stylesheet">
+}
+@section scripts {
+    <script src="~/js/uploadFile.js"></script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Admin</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Upload Registration Details</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Use this form to submit a new csv file of registration details.</p>
+                <form enctype="multipart/form-data" method="post">
+                    <div class="file-loading">
+                        <input id="registrationFile" name="registrationFile" type="file">
+                    </div>
+                    <div id="errorBlock" class="help-block"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Records.Any())
+{
+    @foreach (var item in Model.Records)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <span>@item.RegistrationNumber</span>
+                <span>@item.StudentFirstName</span>
+                <span>@item.StudentLastName</span>
+                <span>@item.TeacherName</span>
+                <span>@item.GradeLevel</span>
+            </div>
+        </div>
+    }
+}
