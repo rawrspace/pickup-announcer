@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
-using PickupAnnouncer.Models;
+using PickupAnnouncer.Models.DAO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PickupAnnouncer.Interfaces
 {
     public interface IRegistrationFileHelper
     {
-        public IEnumerable<RegistrationRecord> ProcessFile(IFormFile formFile);
+        public Task<IEnumerable<RegistrationDetailsDAO>> ProcessFile(IFormFile formFile);
+        Task DeleteAll();
     }
 }

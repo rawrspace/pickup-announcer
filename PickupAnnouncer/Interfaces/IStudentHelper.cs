@@ -1,10 +1,11 @@
 ﻿using PickupAnnouncer.Models.DTO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PickupAnnouncer.Interfaces
 {
     public interface IStudentHelper
     {
-        public List<StudentDTO> GetStudentsForCar(string carId);
+        Task<IEnumerable<StudentDTO>> GetStudentsForCar(int carId);
     }
 }

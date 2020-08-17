@@ -1,33 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NToastNotify;
 using PickupAnnouncer.Interfaces;
-using PickupAnnouncer.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace PickupAnnouncer.Pages
 {
     public class AdminModel : PageModel
     {
         private readonly IRegistrationFileHelper _registrationFileHelper;
+        private readonly IToastNotification _toastNotification;
 
-        public AdminModel(IRegistrationFileHelper registrationFileHelper)
+        public AdminModel(IRegistrationFileHelper registrationFileHelper, IToastNotification toastNotification)
         {
             _registrationFileHelper = registrationFileHelper;
-            Records = new List<RegistrationRecord>();
+            _toastNotification = toastNotification;
         }
-        public IEnumerable<RegistrationRecord> Records { get; set; }
-        public void OnPost(IFormFile registrationFile)
+        public async Task OnPostInsert(IFormFile registrationFile)
         {
-            Records = _registrationFileHelper.ProcessFile(registrationFile);
+            try
+            {
+                await _registrationFileHelper.ProcessFile(registrationFile);
+                _toastNotification.AddSuccessToastMessage("Records updated");
+            }
+            catch(Exception e)
+            {
+                _toastNotification.AddErrorToastMessage(e.Message);
+            }
         }
-        public void OnGet()
-        {
 
+        public async Task OnPostDelete()
+        {
+            try
+            {
+                await _registrationFileHelper.DeleteAll();
+                _toastNotification.AddSuccessToastMessage("Records deleted");
+            }
+            catch (Exception e)
+            {
+                _toastNotification.AddErrorToastMessage(e.Message);
+            }
         }
     }
 }

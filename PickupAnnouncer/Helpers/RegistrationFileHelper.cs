@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using PickupAnnouncer.Interfaces;
 using PickupAnnouncer.Models;
+using PickupAnnouncer.Models.DAO;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,15 +14,31 @@ namespace PickupAnnouncer.Helpers
 {
     public class RegistrationFileHelper : IRegistrationFileHelper
     {
-        public IEnumerable<RegistrationRecord> ProcessFile(IFormFile formFile)
+        private readonly IDbHelper _dbHelper;
+
+        public RegistrationFileHelper(IDbHelper dbHelper)
         {
-            IEnumerable<RegistrationRecord> records = null;
+            _dbHelper = dbHelper;
+        }
+
+        public async Task DeleteAll()
+        {
+            await _dbHelper.DeleteStudentRegistrations();
+        }
+
+        public async Task<IEnumerable<RegistrationDetailsDAO>> ProcessFile(IFormFile formFile)
+        {
+            IEnumerable<RegistrationDetailsDAO> records = null;
             using(var reader = new StreamReader(formFile.OpenReadStream()))
             {
                 using(var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    records = csv.GetRecords<RegistrationRecord>().ToList();
+                    records = csv.GetRecords<RegistrationDetailsDAO>().ToList();
                 }
+            }
+            if (records.Any())
+            {
+                await _dbHelper.AddStudentRegistrations(records);
             }
             return records;
         }

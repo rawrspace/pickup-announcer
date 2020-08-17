@@ -1,54 +1,27 @@
-﻿using PickupAnnouncer.Interfaces;
-using PickupAnnouncer.Models;
+﻿using AutoMapper;
+using PickupAnnouncer.Interfaces;
 using PickupAnnouncer.Models.DTO;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PickupAnnouncer.Helpers
 {
     public class StudentHelper : IStudentHelper
     {
-        private readonly IDbService _dbService;
+        private readonly IDbHelper _dbHelper;
+        private readonly IMapper _mapper;
 
-        public StudentHelper(IDbService dbService)
+        public StudentHelper(IDbHelper dbHelper, IMapper mapper)
         {
-            _dbService = dbService;
+            _dbHelper = dbHelper;
+            _mapper = mapper;
         }
 
-        //TODO: Implement SQLite
-        public List<StudentDTO> GetStudentsForCar(string carId)
+        public async Task<IEnumerable<StudentDTO>> GetStudentsForCar(int carId)
         {
-            switch (carId)
-            {
-                case "1234":
-                    return new List<StudentDTO>()
-                    {
-                        new StudentDTO()
-                        {
-                            Name = "Bobby",
-                            Teacher = "Smith",
-                            GradeLevel = 1
-                        },
-                        new StudentDTO()
-                        {
-                            Name = "Doug",
-                            Teacher = "Taylor",
-                            GradeLevel = 3
-                        }
-                    };
-                case "4321":
-                    return null;
-                default:
-                    return new List<StudentDTO>()
-                    {
-                        new StudentDTO()
-                        {
-                            Name = "Leslie",
-                            Teacher = "Potan",
-                            GradeLevel = 2
-                        }
-                    };
-            }
-
+            var studentRecords = await _dbHelper.GetStudentsForRegistrationId(carId);
+            return studentRecords.Select(x => _mapper.Map<StudentDTO>(x));
         }
     }
 }
