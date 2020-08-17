@@ -10,7 +10,7 @@ namespace PickupAnnouncer.Mappings
         public BaseProfile()
         {
             CreateMap<StudentDAO, StudentDTO>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName.FirstOrDefault()}"));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
         }
     }
 }

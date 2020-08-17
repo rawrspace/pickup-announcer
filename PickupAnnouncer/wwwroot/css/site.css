@@ -75,7 +75,11 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
-.cone-container {
+.card-img {
+    width: 60%;
+}
+
+/*.cone-container {
     position: relative;
     text-align: center;
     color: white;
@@ -91,7 +95,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
+}*/
 
 .grade-pre-k {
     background-color: #8E5572;
