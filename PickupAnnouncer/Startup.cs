@@ -48,7 +48,7 @@ namespace PickupAnnouncer
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddRazorPages(options =>
             {
-                options.Conventions.AuthorizePage("/AdminPanel");
+                options.Conventions.AuthorizePage("/Admin");
             }).AddNToastNotifyToastr();
             services.AddSignalR();
             services.AddControllers();
