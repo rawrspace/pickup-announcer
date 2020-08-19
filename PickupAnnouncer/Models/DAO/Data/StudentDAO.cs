@@ -10,6 +10,6 @@ namespace PickupAnnouncer.Models.DAO
         //TODO: We could move Teacher and GradeLevel to a separate object normalize this a bit more
         // it would make the import file more complex however and I don't think it is needed at this time.
         public string Teacher { get; set; }
-        public int GradeLevel { get; set; }
+        public string GradeLevel { get; set; }
     }
 }

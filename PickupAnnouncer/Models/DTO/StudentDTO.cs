@@ -9,6 +9,6 @@ namespace PickupAnnouncer.Models.DTO
         [JsonProperty("teacher")]
         public string Teacher { get; set; }
         [JsonProperty("gradeLevel")]
-        public int GradeLevel { get; set; }
+        public string GradeLevel { get; set; }
     }
 }

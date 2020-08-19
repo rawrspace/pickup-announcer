@@ -17,6 +17,6 @@ namespace PickupAnnouncer.Models.DAO
         [Name("Teacher Name")]
         public string Teacher { get; set; }
         [Name("Grade Level")]
-        public int GradeLevel { get; set; }
+        public string GradeLevel { get; set; }
     }
 }
