@@ -1,6 +1,8 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +11,7 @@ using PickupAnnouncer.Hubs;
 using PickupAnnouncer.Interfaces;
 using PickupAnnouncer.Mappings;
 using PickupAnnouncer.Services;
+using System;
 
 namespace PickupAnnouncer
 {
@@ -36,8 +39,19 @@ namespace PickupAnnouncer
                 return new Mapper(config);
             });
             services.AddTransient<IRegistrationFileHelper, RegistrationFileHelper>();
-            services.AddRazorPages().AddNToastNotifyToastr();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Login";
+                options.LogoutPath = "/Logout";
+                options.ExpireTimeSpan = TimeSpan.FromHours(1);
+            });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddRazorPages(options =>
+            {
+                options.Conventions.AuthorizePage("/AdminPanel");
+            }).AddNToastNotifyToastr();
             services.AddSignalR();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,12 +75,14 @@ namespace PickupAnnouncer
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapHub<PickupHub>("/pickup");
+                endpoints.MapControllers();
             });
         }
     }

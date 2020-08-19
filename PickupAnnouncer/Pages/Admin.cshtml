@@ -1,7 +1,7 @@
 ﻿@page
 @model PickupAnnouncer.Pages.AdminModel
 @{
-    ViewData["Title"] = "Admin";
+    ViewData["Title"] = "Admin Panel";
 }
 @section head {
     <link rel="stylesheet" href="~/css/uploadForm.css" />
@@ -24,7 +24,7 @@
                 <h5 class="mb-0">Manage Registration Details</h5>
             </div>
             <div class="card-body">
-                <div class="card-group">
+                <div class="card-group mb-2">
                     <div class="card">
                         <div class="card-body">
                             <p class="card-title">
@@ -36,6 +36,19 @@
                                     <input id="registrationFile" name="registrationFile" type="file">
                                 </div>
                                 <div id="errorBlock" class="help-block"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-group mb-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title">
+                                <h5 class="mb-0">Download Registration Details</h5>
+                            </p>
+                            <p class="card-text">Use this button to download all registration details from the Database</p>
+                            <form method="post" asp-page-handler="download">
+                                <button class="btn btn-primary">Download Records</button>
                             </form>
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 ﻿using PickupAnnouncer.Models.DAO;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace PickupAnnouncer.Interfaces
@@ -11,5 +12,6 @@ namespace PickupAnnouncer.Interfaces
         Task<bool> DeleteStudentRegistrations();
 
         Task<IEnumerable<StudentDAO>> GetStudentsForRegistrationId(int registrationId);
+        Task<Stream> GetRegistrationDetailsStream();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NToastNotify;
 using PickupAnnouncer.Interfaces;
@@ -11,11 +12,13 @@ namespace PickupAnnouncer.Pages
     {
         private readonly IRegistrationFileHelper _registrationFileHelper;
         private readonly IToastNotification _toastNotification;
+        private readonly IDbHelper _dbHelper;
 
-        public AdminModel(IRegistrationFileHelper registrationFileHelper, IToastNotification toastNotification)
+        public AdminModel(IRegistrationFileHelper registrationFileHelper, IToastNotification toastNotification, IDbHelper dbHelper)
         {
             _registrationFileHelper = registrationFileHelper;
             _toastNotification = toastNotification;
+            _dbHelper = dbHelper;
         }
         public async Task OnPostInsert(IFormFile registrationFile)
         {
@@ -24,7 +27,7 @@ namespace PickupAnnouncer.Pages
                 await _registrationFileHelper.ProcessFile(registrationFile);
                 _toastNotification.AddSuccessToastMessage("Records updated");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _toastNotification.AddErrorToastMessage(e.Message);
             }
@@ -41,6 +44,15 @@ namespace PickupAnnouncer.Pages
             {
                 _toastNotification.AddErrorToastMessage(e.Message);
             }
+        }
+
+        public async Task<IActionResult> OnPostDownload()
+        {
+            var outputStream = await _dbHelper.GetRegistrationDetailsStream();
+            return new FileStreamResult(outputStream, "application/octet-stream")
+            {
+                FileDownloadName = $"RegistrationDetails-{DateTime.Now:yyyy-MM-dd-HH-mm}.csv"
+            };
         }
     }
 }

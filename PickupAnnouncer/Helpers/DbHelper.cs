@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CsvHelper;
 using PickupAnnouncer.Extensions;
 using PickupAnnouncer.Interfaces;
-using PickupAnnouncer.Models;
 using PickupAnnouncer.Models.DAO;
-using PickupAnnouncer.Models.DAO.Data;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,7 +30,6 @@ namespace PickupAnnouncer.Helpers
             }
             catch (Exception e)
             {
-                //_logger.LogError(e, "Failed to Add Registrations");
                 return false;
             }
         }
@@ -44,7 +43,6 @@ namespace PickupAnnouncer.Helpers
             }
             catch (Exception e)
             {
-                //_logger.LogError(e, "Failed to Delete Registrations");
                 return false;
             }
         }
@@ -53,6 +51,19 @@ namespace PickupAnnouncer.Helpers
         {
             var results = await _dbService.ExecuteStoredProcedure(Sprocs.GetStudentsForRegistrationId, new Dictionary<string, object>() { { "RegistrationId", registrationId } });
             return ParseResults<StudentDAO>(results);
+        }
+
+        public async Task<Stream> GetRegistrationDetailsStream()
+        {
+            var results = await _dbService.ExecuteStoredProcedure(Sprocs.ExportRegistrationDetails);
+            var registrationDetails = ParseResults<RegistrationDetailsDAO>(results).OrderBy(x => x.RegistrationId);
+            var outputStream = new MemoryStream();
+            var writer = new StreamWriter(outputStream);
+            var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+            csv.WriteRecords(registrationDetails);
+            writer.Flush();
+            outputStream.Position = 0;
+            return outputStream;
         }
 
         private static List<T> ParseResults<T>(IList<IDictionary<string, object>> results)
