@@ -69,7 +69,7 @@ document.getElementById("sendButton").addEventListener("click", function (event)
                 $('#cone-container button').removeClass('active');
                 $("#carInput").val('');
             }).catch (function (err) {
-                toast.error(err.toString());
+                toastr.error(err.toString());
              });
         event.preventDefault();
     }
