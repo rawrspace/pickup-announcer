@@ -41,20 +41,20 @@ namespace PickupAnnouncer
             });
             services.AddTransient<IRegistrationFileHelper, RegistrationFileHelper>();
 
-            services.AddDataProtection()
-            .SetApplicationName("pickup-announcer")
-            .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"./"));
+            //services.AddDataProtection()
+            //.SetApplicationName("pickup-announcer")
+            //.PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"./"));
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Login";
-                options.LogoutPath = "/Logout";
-                options.ExpireTimeSpan = TimeSpan.FromHours(1);
-            });
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.LoginPath = "/Login";
+            //    options.LogoutPath = "/Logout";
+            //    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+            //});
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddRazorPages(options =>
             {
-                options.Conventions.AuthorizePage("/Admin");
+                //options.Conventions.AuthorizePage("/Admin");
             }).AddNToastNotifyToastr();
             services.AddSignalR();
             services.AddControllers();
@@ -81,7 +81,7 @@ namespace PickupAnnouncer
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            //app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
