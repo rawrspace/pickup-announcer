@@ -20,7 +20,12 @@ namespace PickupAnnouncer.Services
             _connectionString = connectionString;
         }
 
-        private DbConnection GetConnection()
+        public DbConnection GetConnection()
+        {
+            return new SqlConnection(_connectionString);
+        }
+
+        public SqlConnection GetSqlConnection()
         {
             return new SqlConnection(_connectionString);
         }

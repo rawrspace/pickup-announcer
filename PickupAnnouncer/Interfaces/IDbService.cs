@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace PickupAnnouncer.Interfaces
@@ -9,5 +10,6 @@ namespace PickupAnnouncer.Interfaces
         Task Insert<T>(IEnumerable<T> itemsToInsert);
         Task<IList<IDictionary<string, object>>> ExecuteQuery(string queryText, IDictionary<string, object> parameters);
         Task<IList<IDictionary<string, object>>> ExecuteStoredProcedure(string sprocName, IDictionary<string, object> parameters = null);
+        SqlConnection GetSqlConnection();
     }
 }

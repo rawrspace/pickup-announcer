@@ -41,23 +41,14 @@ namespace PickupAnnouncer
             });
             services.AddTransient<IRegistrationFileHelper, RegistrationFileHelper>();
 
-            //services.AddDataProtection()
-            //.SetApplicationName("pickup-announcer")
-            //.PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"./"));
-
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    options.LoginPath = "/Login";
-            //    options.LogoutPath = "/Logout";
-            //    options.ExpireTimeSpan = TimeSpan.FromHours(1);
-            //});
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddControllers();
             services.AddRazorPages(options =>
             {
-                //options.Conventions.AuthorizePage("/Admin");
+                options.Conventions.AuthorizePage("/Admin");
             }).AddNToastNotifyToastr();
             services.AddSignalR();
-            services.AddControllers();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,14 +72,14 @@ namespace PickupAnnouncer
 
             app.UseRouting();
 
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
                 endpoints.MapHub<PickupHub>("/pickup");
-                endpoints.MapControllers();
             });
         }
     }

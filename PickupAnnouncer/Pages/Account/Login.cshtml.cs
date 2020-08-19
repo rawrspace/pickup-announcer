@@ -20,18 +20,43 @@ namespace PickupAnnouncer.Pages
         {
             this.configuration = configuration;
         }
+        public string ReturnUrl { get; private set; }
 
         [BindProperty]
         public string UserName { get; set; }
         [BindProperty, DataType(DataType.Password)]
         public string Password { get; set; }
-        public string Message { get; set; }
-        public async Task<IActionResult> OnPost()
-        {
-            var siteConfig = configuration.GetSection("SiteConfig").Get<SiteConfig>();
+        [TempData]
 
-            if (UserName == siteConfig.AdminUser && Password == siteConfig.AdminPass)
+        public string ErrorMessage { get; set; }
+
+        public async Task OnGetAsync(string returnUrl = null)
+        {
+            if (!string.IsNullOrEmpty(ErrorMessage))
             {
+                ModelState.AddModelError(string.Empty, ErrorMessage);
+            }
+
+            // Clear the existing external cookie
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            ReturnUrl = returnUrl;
+        }
+
+
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        {
+            ReturnUrl = returnUrl ?? "/Admin";
+
+            if (ModelState.IsValid)
+            {
+                var user = AuthenticateUser(UserName, Password);
+
+                if (!user)
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
                 var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, UserName),
@@ -39,10 +64,16 @@ namespace PickupAnnouncer.Pages
                     };
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                return RedirectToPage("/Admin");
+                return RedirectToPage(ReturnUrl);
             }
-            Message = "Invalid attempt";
+            // Something failed. Redisplay the form.
             return Page();
         }
+
+            private bool AuthenticateUser(string userName, string password)
+            {
+                var siteConfig = configuration.GetSection("SiteConfig").Get<SiteConfig>();
+                return userName == siteConfig.AdminUser && password == siteConfig.AdminPass;
+            }
+        }
     }
-}

@@ -1,4 +1,4 @@
-﻿@page "/Login"
+﻿@page
 @model PickupAnnouncer.Pages.LoginModel
 @{
     ViewData["Title"] = "Admin Log-In";
@@ -6,7 +6,7 @@
 
 <h1>Admin Log-In</h1>
 <div>
-    @Model.Message
+    @Model.ErrorMessage
 </div>
 <form method="post">
     <div class="form-group">
