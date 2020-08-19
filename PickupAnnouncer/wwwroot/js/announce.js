@@ -11,6 +11,15 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
+function addToCarInput(number) {
+    var carInput = $('#carInput');
+    carInput.val(carInput.val() + number);
+}
+
+function clearCarInput() {
+    $('#carInput').val('');
+}
+
 function createConeButtons(numberOfCones, conesPerGroup) {
     var totalCones = 0;
     var numberOfGroups = Math.ceil(numberOfCones / conesPerGroup);
@@ -58,7 +67,7 @@ document.getElementById("sendButton").addEventListener("click", function (event)
             .then(() => {
                 toastr.info('Notification Sent');
                 $('#cone-container button').removeClass('active');
-                document.getElementById("carInput").value = '';
+                $("#carInput").val('');
             }).catch (function (err) {
                 toast.error(err.toString());
              });
