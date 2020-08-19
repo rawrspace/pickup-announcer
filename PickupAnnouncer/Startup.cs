@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +40,11 @@ namespace PickupAnnouncer
                 return new Mapper(config);
             });
             services.AddTransient<IRegistrationFileHelper, RegistrationFileHelper>();
+
+            services.AddDataProtection()
+            .SetApplicationName("pickup-announcer")
+            .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"./"));
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Login";
