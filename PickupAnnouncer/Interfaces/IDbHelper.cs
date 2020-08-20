@@ -1,4 +1,6 @@
-﻿using PickupAnnouncer.Models.DAO;
+﻿using PickupAnnouncer.Models;
+using PickupAnnouncer.Models.DAO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,5 +15,7 @@ namespace PickupAnnouncer.Interfaces
 
         Task<IEnumerable<StudentDAO>> GetStudentsForRegistrationId(int registrationId);
         Task<Stream> GetRegistrationDetailsStream();
+        Task AddPickupLog(PickupNotice pickupNotice);
+        Task<IEnumerable<PickupNotice>> GetPickupNotices(DateTimeOffset startOfDay);
     }
 }

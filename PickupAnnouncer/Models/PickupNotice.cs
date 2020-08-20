@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using PickupAnnouncer.Models.DTO;
+using System;
 using System.Collections.Generic;
 
 namespace PickupAnnouncer.Models
@@ -11,6 +12,8 @@ namespace PickupAnnouncer.Models
         [JsonProperty("cone")]
         public string Cone { get; set; }
         [JsonProperty("students")]
-        public List<StudentDTO> Students;
+        public IEnumerable<StudentDTO> Students { get; set; }
+        [JsonProperty("pickupTimeUTC")]
+        public DateTimeOffset PickupTimeUTC { get; set; }
     }
 }

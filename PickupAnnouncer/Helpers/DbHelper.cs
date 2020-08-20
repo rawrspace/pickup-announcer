@@ -1,7 +1,12 @@
 ﻿using CsvHelper;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PickupAnnouncer.Extensions;
 using PickupAnnouncer.Interfaces;
+using PickupAnnouncer.Models;
 using PickupAnnouncer.Models.DAO;
+using PickupAnnouncer.Models.DAO.Data;
+using PickupAnnouncer.Models.DTO;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,10 +21,12 @@ namespace PickupAnnouncer.Helpers
     public class DbHelper : IDbHelper
     {
         private readonly IDbService _dbService;
+        private readonly ILogger<DbHelper> _logger;
 
-        public DbHelper(IDbService dbService)
+        public DbHelper(IDbService dbService, ILogger<DbHelper> logger)
         {
             _dbService = dbService;
+            _logger = logger;
         }
         public async Task<bool> AddStudentRegistrations(IEnumerable<RegistrationDetailsDAO> registrationDetails)
         {
@@ -60,6 +67,7 @@ namespace PickupAnnouncer.Helpers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "Failed to add registrations");
                 return false;
             }
         }
@@ -73,6 +81,7 @@ namespace PickupAnnouncer.Helpers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "Failed to delete registrations.");
                 return false;
             }
         }
@@ -96,6 +105,12 @@ namespace PickupAnnouncer.Helpers
             return outputStream;
         }
 
+        public async Task AddPickupLog(PickupNotice pickupNotice)
+        {
+            var jsonData = JsonConvert.SerializeObject(pickupNotice);
+            await _dbService.ExecuteStoredProcedure(Sprocs.AddPickupLog, new Dictionary<string, object>() { { "json", jsonData } });
+        }
+
         private static List<T> ParseResults<T>(IList<IDictionary<string, object>> results)
         {
 
@@ -110,6 +125,24 @@ namespace PickupAnnouncer.Helpers
             }
 
             return resultsList;
+        }
+
+        public async Task<IEnumerable<PickupNotice>> GetPickupNotices(DateTimeOffset startOfDay)
+        {
+            var pickupLogs = await _dbService.Get<PickupDAO>("WHERE PickupTimeUTC >= @StartOfDay AND PickupTimeUTC < @EndOfDay", new { StartOfDay = startOfDay, EndOfDay = startOfDay.AddDays(1) });
+            var pickupNotices = pickupLogs.GroupBy(x => new { x.RegistrationId, x.Cone, x.PickupTimeUTC }).Select(x => new PickupNotice()
+            {
+                Car = x.Key.RegistrationId.ToString(),
+                Cone = x.Key.Cone.ToString(),
+                PickupTimeUTC = x.Key.PickupTimeUTC,
+                Students = x.Select(y => new StudentDTO()
+                {
+                    Name = y.Name,
+                    Teacher = y.Teacher,
+                    GradeLevel = y.GradeLevel
+                })
+            });
+            return pickupNotices;
         }
     }
 }

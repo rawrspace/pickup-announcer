@@ -59,7 +59,19 @@ function addAnnouncement(pickupAnnouncement) {
 }
 
 connection.start().then(function () {
-    //Maybe add connected thing
+    $.post({
+        url: `api/PickupLog`,
+        data: JSON.stringify({ startOfDayUTC: moment().startOf('day').utc().format() }),
+        contentType: 'application/json; charset=utf-8'
+    })
+        .done((response) => {
+            if (response && response.announcements) {
+                response.announcements.forEach(announcement => addAnnouncement(announcement));
+            }
+        })
+        .fail((jqXHR, settings, ex) => {
+            toastr.error("Failed to lookup today pickup log.", "API Error")
+        });
 }).catch(function (err) {
     return console.error(err.toString());
 });

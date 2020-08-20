@@ -11,6 +11,15 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
+connection.on("FailureAnnouncement", function (errorMessage) {
+    error.log(errorMessage);
+    toast.error(errorMessage, "Announcement Failure");
+});
+
+connection.on("SuccessAnnouncement", function () {
+    toastr.success('Notification Sent');
+});
+
 function addToCarInput(number) {
     var carInput = $('#carInput');
     carInput.val(carInput.val() + number);
@@ -75,7 +84,6 @@ document.getElementById("sendButton").addEventListener("click", function (event)
             if (data) {
                 connection.invoke("AnnouncePickup", { 'car': car, 'cone': cone })
                     .then(() => {
-                        toastr.success('Notification Sent');
                         $('#cone-container button').removeClass('active');
                         $("#carInput").val('');
                     }).catch(function (err) {

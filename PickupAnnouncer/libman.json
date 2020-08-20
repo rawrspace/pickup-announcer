@@ -59,6 +59,13 @@
         "js/fileinput.min.js",
         "css/fileinput.min.css"
       ]
+    },
+    {
+      "library": "moment.js@2.27.0",
+      "destination": "wwwroot/lib/moment.js/",
+      "files": [
+        "moment.min.js"
+      ]
     }
   ]
 }
