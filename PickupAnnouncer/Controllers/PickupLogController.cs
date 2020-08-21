@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PickupAnnouncer.Interfaces;
 using PickupAnnouncer.Models;
+using PickupAnnouncer.Models.DTO;
 using PickupAnnouncer.Models.Requests;
 using PickupAnnouncer.Models.Responses;
 using System;
@@ -25,9 +26,32 @@ namespace PickupAnnouncer.Controllers
         public async Task<PickupLogResponse> Post([FromBody] PickupLogRequest request)
         {
             var pickupNotices = await _dbHelper.GetPickupNotices(request.StartOfDayUTC);
+            var gradeLevels = pickupNotices.SelectMany(x => x.Students.Select(y => y.GradeLevel)).Distinct();
+            var gradeLevelConfigs = await _dbHelper.GetGradeLevelConfig(gradeLevels);
+            var updatedAnnouncements = new List<PickupNotice>();
+            foreach (var pickupNotice in pickupNotices)
+            {
+                var updatedStudents = new List<StudentDTO>();
+                foreach (var student in pickupNotice.Students)
+                {
+                    if (gradeLevelConfigs.TryGetValue(student.GradeLevel, out var gradeLevelConfig))
+                    {
+                        student.BackgroundColor = gradeLevelConfig.BackgroundColor;
+                        student.TextColor = gradeLevelConfig.TextColor;
+                    }
+                    updatedStudents.Add(student);
+                }
+                updatedAnnouncements.Add(new PickupNotice()
+                {
+                    Car = pickupNotice.Car,
+                    Cone = pickupNotice.Cone,
+                    PickupTimeUTC = pickupNotice.PickupTimeUTC,
+                    Students = updatedStudents
+                });
+            }
             return new PickupLogResponse()
             {
-                Announcements = pickupNotices.OrderBy(x => x.PickupTimeUTC)
+                Announcements = updatedAnnouncements.OrderBy(x => x.PickupTimeUTC)
             };
         }
     }

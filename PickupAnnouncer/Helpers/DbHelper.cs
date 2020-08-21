@@ -5,8 +5,10 @@ using PickupAnnouncer.Extensions;
 using PickupAnnouncer.Interfaces;
 using PickupAnnouncer.Models;
 using PickupAnnouncer.Models.DAO;
+using PickupAnnouncer.Models.DAO.Config;
 using PickupAnnouncer.Models.DAO.Data;
 using PickupAnnouncer.Models.DTO;
+using PickupAnnouncer.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -143,6 +145,36 @@ namespace PickupAnnouncer.Helpers
                 })
             });
             return pickupNotices;
+        }
+
+        public async Task<IDictionary<string, GradeLevel>> GetGradeLevelConfig(IEnumerable<string> gradeLevels)
+        {
+            var gradeLevelNames = String.Join("|", gradeLevels);
+            var results = await _dbService.ExecuteStoredProcedure(Sprocs.GetGradeLevelConfig, new Dictionary<string, object>() { { "GradeLevelNames", gradeLevelNames } });
+            var gradeLevelConfigs = results.Select(x => x.ToType<object, GradeLevel>());
+            return gradeLevelConfigs.ToDictionary(x => x.Name);
+        }
+
+        /// <summary>
+        /// Validates if the credentials are authenticated to access the Admin portal. THIS IS NOT A SECURE LOGIN IT IS ONLY TO RESTRICT ACCIDENTAL ACCESS THAT IS WHY IT IS NOT HASHED.
+        /// </summary>
+        /// <param name="userName">Username to check</param>
+        /// <param name="password">Password to authenticate</param>
+        /// <returns>Bool indicating if the credentials are allow access</returns>
+        public async Task<bool> AuthenticateUser(string username, string password)
+        {
+            var siteConfig = await _dbService.Get<Site>("WHERE AdminUser = @Username AND AdminPass = @Password", new { Username = username, Password = password });
+            return siteConfig.Any();
+        }
+
+        /// <summary>
+        /// Retrieve the number of cones configured
+        /// </summary>
+        /// <returns>The number of configured cones from the database and if the value is not present defaults to 8</returns>
+        public async Task<int> GetNumberOfCones()
+        {
+            var siteConfig = (await _dbService.Get<Site>()).FirstOrDefault();
+            return siteConfig?.NumberOfCones ?? 8;
         }
     }
 }

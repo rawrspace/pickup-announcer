@@ -10,5 +10,9 @@ namespace PickupAnnouncer.Models.DTO
         public string Teacher { get; set; }
         [JsonProperty("gradeLevel")]
         public string GradeLevel { get; set; }
+        [JsonProperty("backgroundColor")]
+        public string BackgroundColor { get; set; }
+        [JsonProperty("textColor")]
+        public string TextColor { get; set; }
     }
 }

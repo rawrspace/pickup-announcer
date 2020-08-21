@@ -21,7 +21,18 @@ namespace PickupAnnouncer.Helpers
         public async Task<IEnumerable<StudentDTO>> GetStudentsForCar(int carId)
         {
             var studentRecords = await _dbHelper.GetStudentsForRegistrationId(carId);
-            return studentRecords.Select(x => _mapper.Map<StudentDTO>(x));
+            var gradeLevels = studentRecords.Select(x => x.GradeLevel).Distinct();
+            var gradeLevelConfigs = await _dbHelper.GetGradeLevelConfig(gradeLevels);
+            return studentRecords.Select(x =>
+            {
+                var student = _mapper.Map<StudentDTO>(x);
+                if(gradeLevelConfigs.TryGetValue(student.GradeLevel, out var gradeLevelConfig))
+                {
+                    student.BackgroundColor = gradeLevelConfig.BackgroundColor;
+                    student.TextColor = gradeLevelConfig.TextColor;
+                }
+                return student;
+            });
         }
     }
 }

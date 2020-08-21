@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
-using PickupAnnouncer.Models;
+using PickupAnnouncer.Interfaces;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace PickupAnnouncer.Pages
 {
     public class LoginModel : PageModel
     {
-        private readonly IConfiguration configuration;
-        public LoginModel(IConfiguration configuration)
+        private readonly IDbHelper _dbHelper;
+
+        public LoginModel(IDbHelper dbHelper)
         {
-            this.configuration = configuration;
+            _dbHelper = dbHelper;
         }
         public string ReturnUrl { get; private set; }
 
@@ -50,7 +48,7 @@ namespace PickupAnnouncer.Pages
 
             if (ModelState.IsValid)
             {
-                var user = AuthenticateUser(UserName, Password);
+                var user = await _dbHelper.AuthenticateUser(UserName, Password);
 
                 if (!user)
                 {
@@ -69,11 +67,5 @@ namespace PickupAnnouncer.Pages
             // Something failed. Redisplay the form.
             return Page();
         }
-
-            private bool AuthenticateUser(string userName, string password)
-            {
-                var siteConfig = configuration.GetSection("SiteConfig").Get<SiteConfig>();
-                return userName == siteConfig.AdminUser && password == siteConfig.AdminPass;
-            }
-        }
     }
+}

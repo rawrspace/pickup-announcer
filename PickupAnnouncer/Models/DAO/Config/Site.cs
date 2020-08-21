@@ -1,6 +1,9 @@
-﻿namespace PickupAnnouncer.Models
+﻿using Dapper;
+
+namespace PickupAnnouncer.Models.DAO.Config
 {
-    public class SiteConfig
+    [Table("Site", Schema = "Config")]
+    public class Site : BaseDAO
     {
         public int NumberOfCones { get; set; }
         public string AdminUser { get; set; }

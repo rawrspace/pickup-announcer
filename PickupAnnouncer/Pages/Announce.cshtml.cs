@@ -1,22 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
-using PickupAnnouncer.Models;
+using PickupAnnouncer.Interfaces;
+using System.Threading.Tasks;
 
 namespace PickupAnnouncer.Pages
 {
     public class AnnounceModel : PageModel
     {
-        private readonly IConfiguration _configuration;
+        private readonly IDbHelper _dbHelper;
 
-        public AnnounceModel(IConfiguration configuration)
+        public AnnounceModel(IDbHelper dbHelper)
         {
-            _configuration = configuration;
+            _dbHelper = dbHelper;
         }
         public int NumberOfCones { get; set; }
-        public void OnGet()
+        public async Task OnGet()
         {
-            var siteConfig = _configuration.GetSection("SiteConfig").Get<SiteConfig>();
-            NumberOfCones = siteConfig.NumberOfCones;
+            NumberOfCones = await _dbHelper.GetNumberOfCones();
         }
     }
 }
