@@ -147,6 +147,8 @@ namespace PickupAnnouncer.Helpers
             return pickupNotices;
         }
 
+        public async Task<IEnumerable<GradeLevel>> GetGradeLevelConfig() => await _dbService.Get<GradeLevel>();
+
         public async Task<IDictionary<string, GradeLevel>> GetGradeLevelConfig(IEnumerable<string> gradeLevels)
         {
             var gradeLevelNames = String.Join("|", gradeLevels);
@@ -175,6 +177,46 @@ namespace PickupAnnouncer.Helpers
         {
             var siteConfig = (await _dbService.Get<Site>()).FirstOrDefault();
             return siteConfig?.NumberOfCones ?? 8;
+        }
+
+        public async Task SetNumberOfCones(int numberOfCones)
+        {
+            var siteConfig = (await _dbService.Get<Site>()).FirstOrDefault();
+            if (siteConfig != null)
+            {
+                siteConfig.NumberOfCones = numberOfCones;
+                await _dbService.Update(siteConfig);
+            }
+            else
+            {
+                var errorMessage = "Failed to locate a SiteConfig in the Database";
+                _logger.LogError(errorMessage);
+                throw new NullReferenceException(errorMessage);
+            }
+        }
+
+        public async Task<bool> DeleteGradeLevelConfig(int id)
+        {
+            var results = await _dbService.Delete<GradeLevel>(id);
+            return results > 0;
+        }
+
+        public async Task<bool> UpdateGradeLevel(GradeLevel gradeLevel)
+        {
+            var results = await _dbService.Update<GradeLevel>(gradeLevel);
+            return results > 0;
+        }
+        public async Task<bool> InsertGradeLevel(GradeLevel gradeLevel)
+        {
+            try
+            {
+                await _dbService.Insert<GradeLevel>(gradeLevel);
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
         }
     }
 }

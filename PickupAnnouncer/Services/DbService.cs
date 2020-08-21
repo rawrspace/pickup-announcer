@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using PickupAnnouncer.Interfaces;
-using PickupAnnouncer.Models.DAO;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -46,6 +45,30 @@ namespace PickupAnnouncer.Services
                 {
                     await connection.InsertAsync(item);
                 }
+            }
+        }
+
+        public async Task<int?> Insert<T>(T itemToInsert)
+        {
+            using (var connection = GetConnection())
+            {
+                return await connection.InsertAsync(itemToInsert);
+            }
+        }
+
+        public async Task<int> Update<T>(T itemToUpdate)
+        {
+            using (var connection = GetConnection())
+            {
+                return await connection.UpdateAsync(itemToUpdate);
+            }
+        }
+
+        public async Task<int> Delete<T>(int id)
+        {
+            using (var connection = GetConnection())
+            {
+                return await connection.DeleteAsync<T>(id);
             }
         }
 

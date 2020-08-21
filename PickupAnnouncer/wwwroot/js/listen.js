@@ -3,7 +3,6 @@
 var connection = new signalR.HubConnectionBuilder().withUrl("/pickup").build();
 
 connection.on("PickupAnnouncement", function (pickupAnnouncementJson) {
-    console.log("Got it: " + pickupAnnouncementJson);
     var pickupAnnouncement = JSON.parse(pickupAnnouncementJson);
     if (pickupAnnouncement.students && pickupAnnouncement.students.length > 0) {
         addAnnouncement(pickupAnnouncement);
@@ -12,6 +11,17 @@ connection.on("PickupAnnouncement", function (pickupAnnouncementJson) {
         studentDetails = "No Students Found"
     }
 });
+
+function getStyle(student) {
+    var style = "";
+    if (student.backgroundColor) {
+        style += ` background-color: ${student.backgroundColor}; `
+    }
+    if (student.textColor) {
+        style += ` color: ${student.textColor}; `
+    }
+    return style;
+}
 
 function addAnnouncement(pickupAnnouncement) {
     var div = document.createElement("div");
@@ -37,7 +47,7 @@ function addAnnouncement(pickupAnnouncement) {
         announcementCard += `
             <div class="row">
                 <div class="col-9">
-                    <div class="row border border-light rounded grade-${student.gradeLevel}">
+                    <div class="row border border-light rounded" style="${getStyle(student)}">
                         <div class="col-12 text-center">
                             <h2 class="mt-4">${student.name}</h2>
                             <h4 class="align-text-bottom text-right">${student.teacher}</h4>

@@ -17,16 +17,17 @@
     },
     {
       "library": "jquery@3.5.1",
+      "destination": "wwwroot/lib/jquery/dist/",
       "files": [
         "jquery.min.js",
         "jquery.js",
         "jquery.min.map"
-      ],
-      "destination": "wwwroot/lib/jquery/dist/"
+      ]
     },
     {
       "provider": "unpkg",
       "library": "bootstrap@4.5.2",
+      "destination": "wwwroot/lib/bootstrap/",
       "files": [
         "LICENSE",
         "dist/css/bootstrap-grid.css",
@@ -49,8 +50,7 @@
         "dist/js/bootstrap.js.map",
         "dist/js/bootstrap.min.js",
         "dist/js/bootstrap.min.js.map"
-      ],
-      "destination": "wwwroot/lib/bootstrap/"
+      ]
     },
     {
       "library": "bootstrap-fileinput@5.1.2",
@@ -65,6 +65,15 @@
       "destination": "wwwroot/lib/moment.js/",
       "files": [
         "moment.min.js"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "huebee@2.1.0",
+      "destination": "wwwroot/lib/huebee/",
+      "files": [
+        "dist/huebee.min.css",
+        "dist/huebee.pkgd.min.js"
       ]
     }
   ]

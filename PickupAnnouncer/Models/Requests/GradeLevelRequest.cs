@@ -1,11 +1,11 @@
-﻿using Dapper;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace PickupAnnouncer.Models.DAO.Config
+namespace PickupAnnouncer.Models.Requests
 {
-    [Table("GradeLevel", Schema = "Config")]
-    public class GradeLevel : BaseDAO
+    public class GradeLevelRequest
     {
+        [JsonProperty("id")]
+        public int? Id { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("backgroundColor")]

@@ -1,5 +1,10 @@
 ﻿@page
 @model PickupAnnouncer.Pages.AnnounceModel
+@section scripts {
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>var numberOfCones = @Model.NumberOfCones;</script>
+    <script src="~/js/announce.js"></script>
+}
 @{
     ViewData["Title"] = "Announcement Panel";
 }
@@ -76,8 +81,3 @@
     </div>
 </div>
 
-@section scripts {
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
-    <script>var numberOfCones = @Model.NumberOfCones;</script>
-    <script src="~/js/announce.js"></script>
-}

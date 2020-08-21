@@ -20,6 +20,13 @@ namespace PickupAnnouncer.Pages
             _toastNotification = toastNotification;
             _dbHelper = dbHelper;
         }
+
+        public int NumberOfCones { get; set; }
+
+        public async Task OnGet()
+        {
+            NumberOfCones = await _dbHelper.GetNumberOfCones();
+        }
         public async Task OnPostInsert(IFormFile registrationFile)
         {
             try

@@ -82,32 +82,3 @@ body {
 .border-2 {
     border-width: 2px !important;
 }
-
-.grade-pre-k {
-    background-color: #8E5572;
-    color: #fff;
-}
-.grade-k {
-    background-color: #0cbaba;
-    color: #fff;
-}
-.grade-1 {
-    background-color: #0b4f6c;
-    color: #fff;
-}
-.grade-2 {
-    background-color: #50723c;
-    color: #fff;
-}
-.grade-3 {
-    background-color: #edb458;
-    color: #fff;
-}
-.grade-4 {
-    background-color: #f49d37;
-    color: #fff;
-}
-.grade-5 {
-    background-color: #e3b23c;
-    color: #fff;
-}

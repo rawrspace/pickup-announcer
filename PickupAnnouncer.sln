@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PickupAnnouncer", "PickupAnnouncer\PickupAnnouncer.csproj", "{5059C1A2-2723-45CB-8622-FD29D0DC28F6}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "PickupAnnouncerDB", "..\PickupAnnouncerDB\PickupAnnouncerDB.sqlproj", "{AAA07A11-761A-4124-B802-1D3E379FEF40}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "PickupAnnouncerDB", "PickupAnnouncerDB\PickupAnnouncerDB.sqlproj", "{AAA07A11-761A-4124-B802-1D3E379FEF40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
