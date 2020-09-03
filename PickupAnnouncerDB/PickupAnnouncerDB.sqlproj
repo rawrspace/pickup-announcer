@@ -66,6 +66,7 @@
     <Folder Include="Config\Tables" />
     <Folder Include="Config\PostDeployment" />
     <Folder Include="Config\Sprocs" />
+    <Folder Include="Snapshots" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Data\Schema.sql" />
@@ -93,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PickupAnnouncerDB.publish.xml" />
+    <None Include="Snapshots\PickupAnnouncerDB_20200903_09-23-54.dacpac" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\PostDeployment\Site.PostDeployment.sql" />
