@@ -28,11 +28,23 @@ Once the database has been deployed you should update the Config.Site table to s
 
 ## Usage
 
+### Admin - Add new registrations
+
+To get started the administrator needs to login to the admin page using the credentials defined in the database. Once logged in they can download a copy of the database which will give them the template to use for adding new student registrations. After entering the new records the file can be uploaded into the data. This is a flush and fill operation and anything removed from the file will also be gone from the database.
+
+### Admin - Add/Modify grade levels
+The administrator can add new grade levels and alter the color for the notification background and foreground. After making changes the save icon on the far right of the row must be used to commit changes.
+
+### Admin - Adjust number of codes
+The administrator can change the number of cones that are available on the announcer page. Whatever number is set will generate that many buttons to be used by the announcer.
+
+### Teachers - Watch for announcements
+
 Teachers will use the application by navigating to the main page and simply leaving the app open. On initial connect all of the announcements for the day will automatically download and then an open SignalR connection will be used to send additional announcements.
 
-The announcer working car rider pickup will use the Announcement page to type in the registration number and the cone where the car will be location. Once submitted the registration ID will be checked and if valid an announcement will be sent.
+### Car Rider Announcer - Announce new pickups
 
-The administration can access the Admin page by logging in with the credentials set during configuration. In the admin panel they can download a copy of the database records, modify, and reupload the data to alter the student records. Admin can also set the number of cones they have on campus and configure the color of announcements for each grade level that is setup.
+The announcer working car rider pickup will use the Announcement page to type in the registration number and the cone where the car will be location. Once submitted the registration ID will be checked and if valid an announcement will be sent.
 
 ## Contributing
 Check out [CONTRIBUTING.md](CONTRIBUTING.md) for more info.
